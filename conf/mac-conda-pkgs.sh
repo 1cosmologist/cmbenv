@@ -22,7 +22,7 @@ conda install --yes -c conda-forge -c anaconda -c apple -c defaults \
     jupyter \
     matplotlib \
     mpi4py \
-    numpy \
+    numpy < 2.0\
     namaster \
     scipy \
     numba \

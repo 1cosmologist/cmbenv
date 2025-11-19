@@ -6,8 +6,10 @@ export GRP=mp107
 export CONDAPRGENV=gnu
 
 export CC="gcc"
+export CXX="g++"
 export FC="gfortran"
 export CFLAGS="-O3 -fPIC -pthread"
+export CXXFLAGS="-O3 -fPIC -pthread"
 export FCFLAGS="-O3 -fPIC -pthread -fexceptions"
 export NTMAKE=8
 

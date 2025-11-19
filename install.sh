@@ -6,7 +6,7 @@ while getopts "v" opt; do
 	   ;;
     esac
 done
-echo Starting cmbenv installation at $(date)
+echo Starting toastenv installation at $(date)
 SECONDS=0
 
 # Defaults
@@ -32,9 +32,9 @@ export PATH=$CONDADIR/bin:$PATH
 source $CONFIGUREENV
 
 # Set installation directories
-CMBENV=$PREFIX/$CMBENVVERSION
-CONDADIR=$CMBENV/conda
-MODULEDIR=$CMBENV/modulefiles/cmbenv
+TOASTENV=$PREFIX/$TOASTENVVERSION
+CONDADIR=$TOASTENV/conda
+MODULEDIR=$TOASTENV/modulefiles/toastenv
 
 # Install conda root environment
 echo Installing conda root environment at $(date)
@@ -65,19 +65,17 @@ echo Setting permissions at $(date)
 # chmod -R u=rwX,g=rX,o-rwx $CONDADIR
 
 # Install modulefile
-echo Installing the cmbenv modulefile to $MODULEDIR at $(date)
+echo Installing the toastenv modulefile to $MODULEDIR at $(date)
 
 mkdir -p $MODULEDIR
 
-cp $topdir/modulefile.gen cmbenv.module
-
-sed -i 's@_CONDADIR_@'"$CONDADIR"'@g' cmbenv.module
-sed -i 's@_CMBENVVERSION_@'"$CMBENVVERSION"'@g' cmbenv.module
-sed -i 's@_PYVERSION_@'"$PYVERSION"'@g' cmbenv.module
-sed -i 's@_CONDAPRGENV_@'"$CONDAPRGENV"'@g' cmbenv.module
-
-cp cmbenv.module $MODULEDIR/$CMBENVVERSION
-cp $topdir/cmbenv.modversion $MODULEDIR/.version_$CMBENVVERSION
+cp $topdir/modulefile.gen toastenv.module
+sed -i 's@_CONDADIR_@'"$CONDADIR"'@g' toastenv.module
+sed -i 's@_TOASTENVVERSION_@'"$TOASTENVVERSION"'@g' toastenv.module
+sed -i 's@_PYVERSION_@'"$PYVERSION"'@g' toastenv.module
+sed -i 's@_CONDAPRGENV_@'"$CONDAPRGENV"'@g' toastenv.module
+cp toastenv.module $MODULEDIR/$TOASTENVVERSION
+cp $topdir/toastenv.modversion $MODULEDIR/.version_$TOASTENVVERSION
 
 # chgrp -R $GRP $MODULEDIR
 # chmod -R u=rwX,g=rX,o-rwx $MODULEDIR

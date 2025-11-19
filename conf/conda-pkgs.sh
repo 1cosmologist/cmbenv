@@ -12,7 +12,6 @@ conda install --yes -c conda-forge -c anaconda -c defaults \
     camb \
     emcee \
     fitsio \
-    pyephem \
     healpy \
     ipython \
     joblib \
@@ -20,7 +19,6 @@ conda install --yes -c conda-forge -c anaconda -c defaults \
     matplotlib \
     numpy \
     scipy \
-    numba \
     pygtc \
     pysm3 \
     namaster \

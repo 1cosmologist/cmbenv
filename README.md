@@ -46,7 +46,7 @@ loadcmbenv () {
     module load cray-mpich craype-accel-nvidia80
     module use ${cmbprefix}/${CMBENVVERSION}/modulefiles
     module load cmbenv
-    source ${cmbprefix}/${CMBENVVERSION}/conda/bin/activate cmbenv
+    source ${cmbprefix}/${CMBENVVERSION}/conda/bin/activate
 }
 ```
 

@@ -2,10 +2,6 @@
 echo Current time $(date) Installing conda packages
 echo condadir is $CONDADIR
 
-# Create and activate the cmbenv environment
-conda create --yes -n cmbenv
-conda activate cmbenv
-
 conda config --set solver classic
 conda install --yes -n base conda-libmamba-solver
 conda config --set solver libmamba

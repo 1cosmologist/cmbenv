@@ -13,20 +13,24 @@ conda install --yes -c conda-forge -c anaconda -c nvidia -c defaults \
     emcee \
     fitsio \
     gputil \
+    h5py \
     healpy \
     ipython \
     joblib \
     jupyter \
     matplotlib \
+    numba \
     numpy \
     scipy \
-    numba \
     pygtc \
     pysm3 \
+    meson \
     namaster \
+    skyplot \
     skytools \
     tqdm \
-    meson \
+    xarray \
+    netcdf4 \
 
     
  && rm -rf $CONDADIR/pkgs/*

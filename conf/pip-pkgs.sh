@@ -6,7 +6,7 @@ pip install --no-cache-dir "jax[cuda13]" "jaxlib" # -f https://storage.googleapi
 
 # see https://docs.nersc.gov/development/languages/python/parallel-python/
 pip install --force --no-cache-dir --no-binary=mpi4py mpi4py
-pip install cython
+# pip install cython
 
 # git clone git@github.com:1cosmologist/skytools.git skytools
 # cd skytools

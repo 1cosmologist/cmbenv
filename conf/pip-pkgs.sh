@@ -5,7 +5,10 @@ echo Installing pip packages at $(date)
 pip install --no-cache-dir "jax[cuda13]" "jaxlib" # -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
 
 # see https://docs.nersc.gov/development/languages/python/parallel-python/
-pip install --force --no-cache-dir --no-binary=mpi4py mpi4py
+echo $cc $CC
+module list
+MPICC="cc -shared" pip install --force-reinstall --no-cache-dir --no-binary=mpi4py mpi4py
+# pip install --force --no-cache-dir --no-binary=mpi4py mpi4py
 # pip install cython
 
 # git clone git@github.com:1cosmologist/skytools.git skytools

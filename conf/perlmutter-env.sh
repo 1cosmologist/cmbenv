@@ -19,7 +19,8 @@ module load cudatoolkit/13.0
 module load cudnn/9.5.0
 module load cray-mpich craype-accel-nvidia80
 
-export MPICC="cc -target-accel=nvidia80 -shared"
+# Updated MPICC flags following: https://docs.nersc.gov/development/languages/python/using-python-perlmutter/#installing-mpi4py-with-gpu-aware-cray-mpich
+export MPICC="cc -shared"
 
 for PRGENV in $(echo gnu intel cray nvidia)
 do

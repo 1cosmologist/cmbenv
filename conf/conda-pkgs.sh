@@ -22,6 +22,7 @@ conda install --yes -c conda-forge -c anaconda -c nvidia -c defaults \
     numba \
     numpy \
     scipy \
+    pixell \
     pygtc \
     pysm3 \
     meson \

@@ -2,12 +2,15 @@
 
 ## Introduction
 
-This package is a fork of exgalsky/xgsmenv environment written and maintained by Marcelo Alvarez.
-It contains scripts for installing cmbenv, an environment for
+This package is a fork of `exgalsky/xgsmenv` environment written and maintained by Marcelo Alvarez.
+It contains scripts for installing `cmbenv`, an environment for
 running extraglactic sky modeling software under development. Currently
 configured for running healpy and GPU-enabled jax on Perlmutter at NERSC.
 
-## Bash convenience functions
+There is a corresponding version for MacOS but without GPU support, since JAX does not 
+support Apple Silicon GPUs. But the same packages can be installed with CPU support.
+
+## Bash convenience functions on NERSC Perlmutter (Updated 11/16/2026)
 
 ```bash
 cmbprefix=$SCRATCH/cmbenv
@@ -32,7 +35,7 @@ installcmbenv () {
 }
 
 loadcmbenv () {
-    
+     
     tag=0.0.1
     branch=master
     if [ ! -z $1 ] ; then    tag=$1; fi
@@ -41,36 +44,48 @@ loadcmbenv () {
     export CMBENVVERSION=$branch-$tag
 
     module unload cudatoolkit # ignore the systemwide cudatoolkit to avoid version conflicts
-    module load cudatoolkit/12.2
-    module load cudnn/8.9.3_cuda12
+    module load cudatoolkit/13.0
+    module load cudnn/9.5.0
     module load cray-mpich craype-accel-nvidia80
     module use ${cmbprefix}/${CMBENVVERSION}/modulefiles
     module load cmbenv
     source ${cmbprefix}/${CMBENVVERSION}/conda/bin/activate
+    export PATH="$PATH:/pscratch/sd/s/shamikg/am-14.0/"
 }
 ```
 
-## Quick start
-
-### Install
-
+## Bash convenience functions on MacOS
 ```bash
-# set target
-prefix=/prepend-path-here/cmbenv # <-- where this version will be installed
-mkdir -p ${prefix}
+cmbprefix=/PATH/TO/cmbenv
+installcmbenv () {
 
-tmp_build_dir=/path-to-temporary-build-directory
-git clone https://github.com/exgalsky/cmbenv ${tmp_build_dir}
-cd ${tmp_build_dir}
+    tag=0.0.1
+    branch=mac
+    if [ ! -z $1 ] ; then    tag=$1; fi
+    if [ ! -z $2 ] ; then branch=$2; fi
 
-unset PYTHONPATH
-export CMBENVVERSION=$(date '+%Y%m%d')-0.0.0 # <-- name of this version
-CONF=perlmutter PKGS=default PREFIX=${prefix} ./install.sh |& tee install.log
-```
+    export PYTHONPATH=
+    cd
+    export CMBENVVERSION=$branch-$tag
+    rm -rf $cmbprefix/$CMBENVVERSION
+    tmp_build_dir=/PATH/TO/cmbenv
+    rm -rf ${tmp_build_dir}
+    git clone -b $branch https://github.com/1cosmologist/cmbenv ${tmp_build_dir}
+    chmod -R a+x ${tmp_build_dir}
+    cd ${tmp_build_dir} 
+    # echo $PATH
+    echo `which python`
+    CONF=mac PKGS=mac-default PREFIX=${cmbprefix} ./mac-install.sh |& tee install-${CMBENVVERSION}.log
+}
 
-### Load the environment installed above
+loadcmbenv () {
+    
+    tag=0.0.1
+    branch=mac
+    if [ ! -z $1 ] ; then    tag=$1; fi
+    if [ ! -z $2 ] ; then branch=$2; fi
 
-```bash
-module use ${prefix}/${CMBENVVERSION}/modulefiles
-module load cmbenv
+    export CMBENVVERSION=$branch-$tag
+    source ${cmbprefix}/${CMBENVVERSION}/conda/bin/activate
+}
 ```

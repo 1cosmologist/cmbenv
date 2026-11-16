@@ -50,6 +50,9 @@ source $CONDADIR/bin/activate
 export PYVERSION=$(python -c "import sys; print(str(sys.version_info[0])+'.'+str(sys.version_info[1]))")
 echo Using Python version $PYVERSION
 
+# Remove miniconda installer
+rm miniconda.sh
+
 # Install packages
 source $INSTALLPKGS
 

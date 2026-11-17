@@ -53,8 +53,9 @@ loadcmbenv () {
         echo "Load or swap to PrgEnv-gnu before calling loadcmbenv" >&2
         return 1
     }
-    if module is-loaded cmbenv; then
-        echo "Unload the existing cmbenv module first" >&2
+    if module is-loaded cmbenv &&
+       { [[ "${CMBENV:-}" != "$env_dir" ]] || [[ "${CMBENV_VERSION:-}" != "$version" ]]; }; then
+        echo "A different cmbenv is loaded; deactivate it and run 'module unload cmbenv' first" >&2
         return 1
     fi
 

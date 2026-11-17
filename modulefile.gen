@@ -17,6 +17,7 @@ proc ModulesHelp { } {
 }
 
 conflict cmbenv
+prereq PrgEnv-_CONDAPRGENV_
 
 # This is set by OS python and gives us problems.
 unsetenv PYTHONSTARTUP
@@ -30,20 +31,4 @@ setenv CMBENV_VERSION _CMBENVVERSION_
 # for basemap; see https://github.com/matplotlib/basemap/issues/419
 setenv PROJ_LIB _CONDADIR_/share/proj
 
-# in case PrgEnv-_CONDAPRGENV_ is not loaded, swap it in
 setenv CRAYPE_LINK_TYPE dynamic
-if [ module-info mode load ] {
-  if [ is-loaded PrgEnv-_CONDAPRGENV_ ] {
-  } else {
-    if [ is-loaded PrgEnv-cray ] {
-      module swap PrgEnv-cray  PrgEnv-_CONDAPRGENV_
-    }
-    if [ is-loaded PrgEnv-intel ] {
-      module swap PrgEnv-intel PrgEnv-_CONDAPRGENV_
-    }
-    if [ is-loaded PrgEnv-gnu ] {
-      module swap PrgEnv-gnu   PrgEnv-_CONDAPRGENV_
-    }
-  }
-}
-

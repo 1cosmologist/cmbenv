@@ -49,6 +49,11 @@ loadcmbenv () {
 
     export CMBENVVERSION=$branch-$tag
 
+    module is-loaded PrgEnv-gnu || {
+        echo "Load or swap to PrgEnv-gnu before calling loadcmbenv" >&2
+        return 1
+    }
+
     module unload cudatoolkit # ignore the systemwide cudatoolkit to avoid version conflicts
     module load cudatoolkit/13.0
     module load cudnn/9.5.0

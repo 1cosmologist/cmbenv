@@ -1,13 +1,9 @@
 # conda packages
 echo Current time $(date) Installing conda packages
-echo condadir is $CONDADIR
+echo Conda environment is "$ENV_DIR"
 
-conda config --set solver classic
-conda install --yes -n base conda-libmamba-solver
-conda config --set solver libmamba
-
-conda config --set channel_priority flexible
-conda install --yes -c conda-forge -c anaconda -c nvidia -c defaults \
+CONDA_CHANNEL_PRIORITY=flexible conda install --yes --prefix "$ENV_DIR" \
+    -c conda-forge -c anaconda -c nvidia -c defaults \
     astropy \
     camb \
     emcee \
@@ -33,15 +29,7 @@ conda install --yes -c conda-forge -c anaconda -c nvidia -c defaults \
     xarray \
     netcdf4 || { echo "ERROR installing Conda packages" >&2; exit 1; }
 
-    
- rm -rf $CONDADIR/pkgs/*
-
-if [ $? != 0 ]; then
-    echo "ERROR installing conda packages; exiting"
-    exit 1
-fi
-
-conda list --export | grep -v conda > "$CONDADIR/pkg_list.txt"
-# conda config --set solver classic
+"$CONDADIR/bin/conda" list --prefix "$ENV_DIR" --export > "$ENV_DIR/pkg_list.txt" ||
+    { echo "ERROR listing Conda packages" >&2; exit 1; }
 
 echo Current time $(date) Done installing conda packages

@@ -13,6 +13,8 @@ support Apple Silicon GPUs. But the same packages can be installed with CPU supp
 On Perlmutter, mpi4py is built from source with the Cray compiler wrapper and
 Cray MPICH; other packages may use Conda's compilers and libraries. Load the
 compatible Cray MPICH and CUDA modules when running the environment.
+Miniforge is installed at `<prefix>/<version>/conda`; packages are installed
+in its separate `envs/cmbenv` environment, not in base.
 
 ## Bash convenience functions on NERSC Perlmutter (Updated 11/16/2026)
 
@@ -41,26 +43,31 @@ installcmbenv () {
 }
 
 loadcmbenv () {
-     
-    tag=0.0.1
-    branch=master
-    if [ ! -z $1 ] ; then    tag=$1; fi
-    if [ ! -z $2 ] ; then branch=$2; fi
-
-    export CMBENVVERSION=$branch-$tag
+    local tag="${1:-0.0.1}" branch="${2:-master}"
+    local version="${branch}-${tag}"
+    local install_dir="${cmbprefix:?Set cmbprefix first}/${version}"
+    local env_dir="$install_dir/conda/envs/cmbenv"
 
     module is-loaded PrgEnv-gnu || {
         echo "Load or swap to PrgEnv-gnu before calling loadcmbenv" >&2
         return 1
     }
+    if module is-loaded cmbenv; then
+        echo "Unload the existing cmbenv module first" >&2
+        return 1
+    fi
 
-    module unload cudatoolkit # ignore the systemwide cudatoolkit to avoid version conflicts
-    module load cudatoolkit/13.0
-    module load cudnn/9.5.0
-    module load cray-mpich craype-accel-nvidia80
-    module use ${cmbprefix}/${CMBENVVERSION}/modulefiles
-    module load cmbenv
-    source ${cmbprefix}/${CMBENVVERSION}/conda/bin/activate
+    module unload cudatoolkit || return 1
+    module load cudatoolkit/13.0 cudnn/9.5.0 || return 1
+    module load cray-mpich craype-accel-nvidia80 || return 1
+    module use "$install_dir/modulefiles" || return 1
+    module load "cmbenv/$version" || return 1
+    [[ "${CMBENV:-}" == "$env_dir" ]] || {
+        echo "Loaded cmbenv from an unexpected path" >&2
+        return 1
+    }
+    source "$install_dir/conda/bin/activate" "$env_dir" || return 1
+    export CMBENVVERSION="$version"
 }
 ```
 

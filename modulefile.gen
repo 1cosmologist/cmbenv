@@ -21,14 +21,14 @@ prereq PrgEnv-_CONDAPRGENV_
 
 # This is set by OS python and gives us problems.
 unsetenv PYTHONSTARTUP
+unsetenv PYTHONPATH
 
 # This is the conda environment location
-prepend-path PATH _CONDADIR_/bin
-setenv PYTHONPATH _CONDADIR_/lib/python_PYVERSION_/site-packages
-setenv CMBENV _CONDADIR_
+prepend-path PATH _ENV_DIR_/bin
+setenv CMBENV _ENV_DIR_
 setenv CMBENV_VERSION _CMBENVVERSION_
 
 # for basemap; see https://github.com/matplotlib/basemap/issues/419
-setenv PROJ_LIB _CONDADIR_/share/proj
+setenv PROJ_LIB _ENV_DIR_/share/proj
 
 setenv CRAYPE_LINK_TYPE dynamic

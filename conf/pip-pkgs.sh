@@ -2,7 +2,7 @@
 echo Installing pip packages at $(date)
 
 # JAX install follows: https://docs.nersc.gov/development/languages/python/using-python-perlmutter/#jax
-python -m pip install --no-cache-dir "jax[cuda13]" "jaxlib" || {
+"$ENV_DIR/bin/python" -m pip install --no-cache-dir "jax[cuda13]" "jaxlib" || {
     echo "ERROR installing JAX; exiting" >&2
     exit 1
 }
@@ -14,7 +14,7 @@ if [[ ! -x "${CRAYPE_DIR:-}/bin/cc" ]]; then
 fi
 
 MPI4PY_BUILD_MPICC="$CRAYPE_DIR/bin/cc -shared" \
-    python -m pip install --force-reinstall --no-cache-dir --no-binary=mpi4py mpi4py || {
+    "$ENV_DIR/bin/python" -m pip install --force-reinstall --no-cache-dir --no-binary=mpi4py mpi4py || {
     echo "ERROR installing mpi4py; exiting" >&2
     exit 1
 }

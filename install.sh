@@ -38,6 +38,7 @@ source "$CONFIGUREENV" || fail "Could not initialize environment from $CONFIGURE
 [[ -n ${PREFIX:-} && -n ${CMBENVVERSION:-} ]] || fail "PREFIX and CMBENVVERSION must be set"
 CMBENV=$PREFIX/$CMBENVVERSION
 CONDADIR=$CMBENV/conda
+ENV_DIR=$CONDADIR/envs/cmbenv
 MODULEDIR=$CMBENV/modulefiles/cmbenv
 
 # Install conda root environment
@@ -48,11 +49,10 @@ mkdir -p "$CONDADIR/bin" "$CONDADIR/lib" || fail "Could not create Conda directo
 curl -fSL "$MINICONDA" -o miniconda.sh || fail "Could not download Miniforge"
 /bin/bash miniconda.sh -b -f -p "$CONDADIR" || fail "Could not install Miniforge"
 
-source "$CONDADIR/bin/activate" || fail "Could not activate Conda environment"
-PYVERSION=$(python -c "import sys; print(str(sys.version_info[0])+'.'+str(sys.version_info[1]))") ||
-    fail "Could not determine Python version"
-export PYVERSION
-echo Using Python version $PYVERSION
+"$CONDADIR/bin/conda" create --yes --prefix "$ENV_DIR" -c conda-forge python pip ||
+    fail "Could not create cmbenv Conda environment"
+source "$CONDADIR/bin/activate" "$ENV_DIR" || fail "Could not activate cmbenv Conda environment"
+[[ ${CONDA_PREFIX:-} == "$ENV_DIR" ]] || fail "Activated Conda environment is not $ENV_DIR"
 
 # Remove miniconda installer
 rm miniconda.sh || fail "Could not remove Miniforge installer"
@@ -60,10 +60,15 @@ rm miniconda.sh || fail "Could not remove Miniforge installer"
 # Install packages
 source "$INSTALLPKGS" || fail "Could not install packages from $INSTALLPKGS"
 
+PYVERSION=$("$ENV_DIR/bin/python" -c "import sys; print(str(sys.version_info[0])+'.'+str(sys.version_info[1]))") ||
+    fail "Could not determine Python version"
+export PYVERSION
+echo Using Python version $PYVERSION
+
 # Compile python modules
 echo Pre-compiling python modules at $(date)
 
-"python$PYVERSION" -m compileall -f "$CONDADIR/lib/python$PYVERSION/site-packages" ||
+"$ENV_DIR/bin/python" -m compileall -f "$ENV_DIR/lib/python$PYVERSION/site-packages" ||
     fail "Could not pre-compile Python modules"
 
 # Set permissions
@@ -79,9 +84,8 @@ mkdir -p "$MODULEDIR" || fail "Could not create module directory"
 
 cp "$topdir/modulefile.gen" cmbenv.module || fail "Could not prepare modulefile"
 
-sed -i 's@_CONDADIR_@'"$CONDADIR"'@g' cmbenv.module || fail "Could not configure modulefile"
+sed -i 's@_ENV_DIR_@'"$ENV_DIR"'@g' cmbenv.module || fail "Could not configure modulefile"
 sed -i 's@_CMBENVVERSION_@'"$CMBENVVERSION"'@g' cmbenv.module || fail "Could not configure modulefile"
-sed -i 's@_PYVERSION_@'"$PYVERSION"'@g' cmbenv.module || fail "Could not configure modulefile"
 sed -i 's@_CONDAPRGENV_@'"$CONDAPRGENV"'@g' cmbenv.module || fail "Could not configure modulefile"
 
 cp cmbenv.module "$MODULEDIR/$CMBENVVERSION" || fail "Could not install modulefile"

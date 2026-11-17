@@ -49,7 +49,7 @@ mkdir -p "$CONDADIR/bin" "$CONDADIR/lib" || fail "Could not create Conda directo
 curl -fSL "$MINICONDA" -o miniconda.sh || fail "Could not download Miniforge"
 /bin/bash miniconda.sh -b -f -p "$CONDADIR" || fail "Could not install Miniforge"
 
-"$CONDADIR/bin/conda" create --yes --prefix "$ENV_DIR" -c conda-forge python pip ||
+"$CONDADIR/bin/conda" create --yes --prefix "$ENV_DIR" -c conda-forge "python=3.14" pip ||
     fail "Could not create cmbenv Conda environment"
 source "$CONDADIR/bin/activate" "$ENV_DIR" || fail "Could not activate cmbenv Conda environment"
 [[ ${CONDA_PREFIX:-} == "$ENV_DIR" ]] || fail "Activated Conda environment is not $ENV_DIR"

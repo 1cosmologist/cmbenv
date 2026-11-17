@@ -14,7 +14,8 @@ On Perlmutter, mpi4py is built from source with the Cray compiler wrapper and
 Cray MPICH; other packages may use Conda's compilers and libraries. Load the
 compatible Cray MPICH and CUDA modules when running the environment.
 Miniforge is installed at `<prefix>/<version>/conda`; packages are installed
-in its separate `envs/cmbenv` environment, not in base.
+in its separate `envs/cmbenv` environment, not in base. The environment uses
+Python 3.14 because packages such as pixell do not yet support Python 3.15.
 
 ## Bash convenience functions on NERSC Perlmutter (Updated 11/16/2026)
 

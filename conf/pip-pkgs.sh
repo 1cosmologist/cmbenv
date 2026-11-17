@@ -5,9 +5,13 @@ echo Installing pip packages at $(date)
 pip install --no-cache-dir "jax[cuda13]" "jaxlib" # -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
 
 # see https://docs.nersc.gov/development/languages/python/parallel-python/
-echo $cc $CC
-module list
-MPICC="cc -shared" pip install --force-reinstall --no-cache-dir --no-binary=mpi4py mpi4py
+if [[ ! -x "${CRAYPE_DIR:-}/bin/cc" ]]; then
+    echo "ERROR: Cray compiler wrapper not found; load craype and PrgEnv-gnu" >&2
+    exit 1
+fi
+
+MPI4PY_BUILD_MPICC="$CRAYPE_DIR/bin/cc -shared" \
+    python -m pip install --force-reinstall --no-cache-dir --no-binary=mpi4py mpi4py
 # pip install --force --no-cache-dir --no-binary=mpi4py mpi4py
 # pip install cython
 

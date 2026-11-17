@@ -10,6 +10,10 @@ configured for running healpy and GPU-enabled jax on Perlmutter at NERSC.
 There is a corresponding version for MacOS but without GPU support, since JAX does not 
 support Apple Silicon GPUs. But the same packages can be installed with CPU support.
 
+On Perlmutter, mpi4py is built from source with the Cray compiler wrapper and
+Cray MPICH; other packages may use Conda's compilers and libraries. Load the
+compatible Cray MPICH and CUDA modules when running the environment.
+
 ## Bash convenience functions on NERSC Perlmutter (Updated 11/16/2026)
 
 ```bash
@@ -50,7 +54,6 @@ loadcmbenv () {
     module use ${cmbprefix}/${CMBENVVERSION}/modulefiles
     module load cmbenv
     source ${cmbprefix}/${CMBENVVERSION}/conda/bin/activate
-    export PATH="$PATH:/pscratch/sd/s/shamikg/am-14.0/"
 }
 ```
 

@@ -31,10 +31,10 @@ conda install --yes -c conda-forge -c anaconda -c nvidia -c defaults \
     skytools \
     tqdm \
     xarray \
-    netcdf4 \
+    netcdf4 || { echo "ERROR installing Conda packages" >&2; exit 1; }
 
     
- && rm -rf $CONDADIR/pkgs/*
+ rm -rf $CONDADIR/pkgs/*
 
 if [ $? != 0 ]; then
     echo "ERROR installing conda packages; exiting"

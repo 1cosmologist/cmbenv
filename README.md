@@ -35,7 +35,9 @@ installcmbenv () {
     cd ${tmp_build_dir}
     # echo $PATH
     echo `which python`
-    CONF=perlmutter PKGS=default PREFIX=${cmbprefix} ./install.sh |& tee install-${CMBENVVERSION}.log
+    ( set -o pipefail
+      CONF=perlmutter PKGS=default PREFIX=${cmbprefix} ./install.sh |& tee install-${CMBENVVERSION}.log
+    )
 }
 
 loadcmbenv () {
